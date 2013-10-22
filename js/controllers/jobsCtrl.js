@@ -1,0 +1,1 @@
+app.controller("jobsCtrl",["$scope","AJAX","$sce",function(D,C,A){var B=C({url:APP_ACTION["JOB"],cache:true,bCall:function(){D.$emit("LOAD")},sCall:function(F){try{D.html=A.trustAsHtml(F)}catch(E){D.html=":( 数据传输出错了"}},cCall:function(){D.$emit("UNLOAD")},eCall:function(){D.html=":( 数据传输出错了"}});D.$on("$destroy",function(){B.resolve()})}]);

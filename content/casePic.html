@@ -1,0 +1,22 @@
+<style>
+    header .topcoat-navigation-bar__title,.headericon {color: #9B59B6;}
+
+</style>
+<div ng-controller="casePicCtrl" id="morePic" class="content">
+    <link rel="stylesheet" href="css/casePic.css">
+    <script type="text/javascript" src="libs/cardview.js"></script>
+    <!--<div id="wrapper" ng-if="newPicArr">-->
+
+    <div id="wrapper">
+        <ul id="deck">
+            <li class="card" ng-repeat="picture in pictures track by $id($index)">
+                <div>
+                    <img ng-src="{{picture}}" />
+                </div>
+            </li>
+        </ul>
+        <h3 class="caseDescription" data-ng-bind-html="caseDescription">{{caseDescription}}</h3>
+        <!--<h3 class="caseDescription">{{caseDescription}}</h3>-->
+    </div>
+</div>
+
