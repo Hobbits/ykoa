@@ -26,7 +26,10 @@
                 var icon=$('.attentionBtn .headericon')[0];
                 var target=$('.caseDescription')[0];
                 icon.classList.remove('icon-attention-alt');
-                Hammer(ele).on('tap',function(){
+
+                var eventStr= isTouchDevice? 'touchend':'click';
+
+                var switcher=function(){
                     var cl=target.classList;
                     if(shown){
                         shown=false;
@@ -37,7 +40,14 @@
                         cl.add('show');
                         icon.classList.add('icon-attention-alt');
                     }
+                };
+
+                ele.addEventListener(eventStr,switcher);
+
+                $('#morePic').on('die',function(){
+                   ele.removeEventListener(eventStr,switcher);
                 });
+
             }());
         </script>
 
