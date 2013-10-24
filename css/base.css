@@ -155,7 +155,7 @@
 
 .theme3 .fixlistItem {color: #9B59B6;}
 .theme3 .highLight {background-color: rgba(182,158,181,0.5);}
-
+.theme3 .case-button.highLight{background-color: rgba(182,158,181,1);}
 
 
 .theme5 input:checked + .fixlistItem {color: #D35400;}
