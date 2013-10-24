@@ -7,7 +7,7 @@
 .headericon{
     font-size: 1.5rem;
 }
-
+.attentionBtn{display: none;}
 /*.settings-icon {*/
     /*background: url("../images/settings.svg") no-repeat;*/
     /*-webkit-background-size: cover;*/
