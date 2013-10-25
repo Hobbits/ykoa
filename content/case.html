@@ -109,7 +109,7 @@
         <div class="dropdown-menu">
             <span class="caret2"></span>
             <ul id="caseCategory">
-                <li hm-tap="getCaseCategory(caseCategory)" data-ng-repeat="caseCategory in caseCategories" ng-class="{noborder: $last}" data-ng-cloak>
+                <li hm-tap="changeCaseCategory(caseCategory)" data-ng-repeat="caseCategory in caseCategories" ng-class="{noborder: $last}" data-ng-cloak>
                     {{caseCategory.name}}
                 </li>
             </ul>
@@ -119,7 +119,7 @@
     <div class="contentNoWebkitTouch fixnavContent caseContent" >
         <div class="case-info">
             <dl touchact="highLight" data-ng-repeat="case in cases">
-                <dt class="casepicLink" nav-to="/casepic/{{case.id}}" ng-style="{ backgroundImage: 'url({{IMAGE_ROOT+case.app_img_thumb}})' }"></dt>
+                <dt class="casepicLink" nav-to="/casepic/{{case.id}}" style="background-image:url({{IMAGE_ROOT+case.app_img_thumb}})"></dt>
                 <dd data-ng-cloak>{{case.title}}</dd>
             </dl>
         </div>
