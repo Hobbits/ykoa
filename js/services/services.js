@@ -1,1 +1,88 @@
-app.factory("AJAX",["$http","$q",function(C,A){var B=function(E){var D=A.defer();var F=E.method||"GET";if(typeof(E.bCall)=="function"){E.bCall()}var G={cache:E.cache||false};G.url=E.url;G.method=F;if(F=="GET"){G.params=E.p||{}}else{G.data=E.p||null}G.timeout=E.timeout||D.promise||15000;C(G).success(function(K,J,H,I){if(typeof(E.sCall)=="function"){E.sCall(K,J,H,I)}if(typeof(E.cCall)=="function"){E.cCall(K,J,H,I)}}).error(function(K,J,H,I){if(typeof(E.eCall)=="function"){E.eCall(K,J,H,I)}if(typeof(E.cCall)=="function"){E.cCall(K,J,H,I)}});return D};return B}]);app.factory("newsList",["$resource",function(A){var B=A(APP_ACTION["NEWSLIST"]+":catId/:pageNum/:limit",{catId:1,pageNum:1,limit:6});return B}]);app.factory("headerChanger",["$rootScope",function(A){return{send:function(B){A.$broadcast("$headerChangeEvt",B)}}}]);app.factory("noticeInfo",["$rootScope","$timeout",function(A,B){return{show:function(D){var C={message:"网络异常，请稍后重试",hideDelay:"2000"};if(D&&angular.isObject(D)){angular.extend(C,D)}A.message=C.message;A.showNoticeInfo=true;B(function(){A.showNoticeInfo=false},C.hideDelay)}}}]);
+app.factory('AJAX', ['$http','$q',function($http,$q){
+    /*url p bCall sCall eCall*/
+    var send=function(o){
+
+        var canceler = $q.defer();
+
+        var sendmethod=o.method || "GET";
+        if(typeof(o.bCall)=="function"){o.bCall();}
+
+        var httpPatams={
+            cache: o.cache||false
+        };
+        httpPatams.url= o.url;
+        httpPatams.method =sendmethod;
+        if(sendmethod=="GET"){
+            httpPatams.params=o.p || {};
+        }else{
+            httpPatams.data=o.p || null;
+        };
+
+        /*设定超时*/
+        httpPatams.timeout= o.timeout || canceler.promise || 15000;
+
+        $http(httpPatams).success(function(data, status, headers, config){
+            if(typeof(o.sCall)=="function"){
+                o.sCall(data,status, headers, config);
+            };
+            if(typeof(o.cCall)=="function"){
+                o.cCall(data,status, headers, config);
+            };
+        }).error(function(data,status, headers, config){
+                if(typeof(o.eCall)=="function"){
+                    o.eCall(data,status, headers, config);
+                };
+                if(typeof(o.cCall)=="function"){
+                    o.cCall(data,status, headers, config);
+                };
+//                if (status == 401) {
+//                    try{
+//                        delete $localStorage.userInfo;
+//                        $sessionStorage.$reset();
+//                    }catch(e){};
+//                    $navigate.go('/login'+status,'modal',true);
+//                }
+            });
+
+        return canceler;
+    };
+    return send;
+}]);
+
+app.factory('newsList', ['$resource', function($resource) {
+    var res = $resource(APP_ACTION['NEWSLIST']+':catId/:pageNum/:limit',
+        {catId:1,pageNum:1,limit:6});
+    return res;
+}]);
+
+
+
+
+app.factory('headerChanger',['$rootScope',function($rootScope){
+    return {
+        send:function(o){
+            $rootScope.$broadcast("$headerChangeEvt",o);
+        }
+    };
+}]);
+
+
+app.factory('noticeInfo',['$rootScope','$timeout',function($rootScope,$timeout){
+    return {
+        show: function(o){
+            var noticeInfoOptions = {
+                message: "网络异常，请稍后重试",
+                hideDelay: "2000"
+            }
+            if(o && angular.isObject(o)){
+                angular.extend(noticeInfoOptions, o);
+            }
+            $rootScope.message = noticeInfoOptions.message;
+            $rootScope.showNoticeInfo = true;
+            $timeout(function(){
+                $rootScope.showNoticeInfo = false;
+            },noticeInfoOptions.hideDelay);
+
+        }
+    }
+}]);

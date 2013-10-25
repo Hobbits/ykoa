@@ -1,1 +1,56 @@
-(function(A){var E=document.body;var C="webkitTransform" in document.documentElement.style?"-webkit-transform":"transform";var B=document.getElementById("homeStyle");var D=function(){var K=E.offsetWidth;var O=E.offsetHeight;var G=Math.atan(K/O);var F=G/0.017453293;var M=K/Math.sin(G);var J=(M/2)*-1;var I="height:"+M+"px;width:"+M+"px;margin-left:"+J+"px;margin-top:"+J+"px;top:50%;left:50%;"+C+":rotate("+F+"deg);";I="#cardWrap{"+I+"}";var N=function(P,R){var Q=P+"{-webkit-transform:rotate("+R+"deg)}";Q+=P+"{transform:rotate("+R+"deg)}";return Q};var L="";if(C!="-webkit-transform"){L=".cardIcon{max-height:"+M/5*0.4+"px}"}var H=N(".cardIcon",F*-1)+N(".cardTitle",F*-1)+L;B.innerHTML=I+H};A.addEventListener("resize",D);D()}(window));$("body").on("click","[href]",function(B){B.preventDefault();var A=$(this).attr("href");if(A.indexOf("http")>0){window.open(A,"_blank","location=yes")}});app.run(["$route","$http","$templateCache",function(C,B,A){angular.forEach(C.routes,function(D){if(D.templateUrl){B.get(D.templateUrl,{cache:A})}})}]);
+/*主页样式*/
+(function(window){
+    var content=document.body;
+    var TRANSFORM="webkitTransform" in document.documentElement.style ? "-webkit-transform" : "transform";
+    var cssBowl=document.getElementById('homeStyle');
+    var setDeg=function(){
+        var width=content.offsetWidth;
+        var height=content.offsetHeight;
+        var rotationVal=Math.atan(width/height);
+        var newDeg=rotationVal/0.017453293;
+        var c=width/Math.sin(rotationVal);
+        var nagMar=(c/2)*-1;
+        var cardWrapCss='height:'+c+'px;'+'width:'+c+'px;'
+        +'margin-left:'+nagMar+'px;'
+        +'margin-top:'+nagMar+'px;'
+        +'top:50%;left:50%;'
+        +TRANSFORM+':'+'rotate('+newDeg+'deg);';
+        cardWrapCss='#cardWrap{'+cardWrapCss+'}';
+
+        var roStringGen=function(cssrole,deg){
+            var cssString=cssrole+'{-webkit-transform:'+'rotate('+deg+'deg)'+'}';
+            cssString+=cssrole+'{transform:'+'rotate('+deg+'deg)'+'}';
+            return cssString;
+        };
+        var iconmaxHeight='';
+        if(TRANSFORM!='-webkit-transform'){
+            /*Fix none webkit browsers*/
+            iconmaxHeight='.cardIcon{max-height:'+c/5*0.4+'px}';
+        }
+        var fixRotString = roStringGen('.cardIcon',newDeg*-1)+roStringGen('.cardTitle',newDeg*-1)+iconmaxHeight;
+        cssBowl.innerHTML=cardWrapCss+fixRotString;
+
+    };
+    window.addEventListener('resize',setDeg);
+    setDeg();
+
+}(window));
+/*主页样式结束*/
+
+
+$('body').on('click',"[href]",function(event){
+    event.preventDefault();
+    var url=$(this).attr('href');
+    if(url.indexOf("http") > 0){
+        window.open(url, '_blank', 'location=yes');
+    }
+    });
+
+
+app.run(['$route', '$http', '$templateCache',function($route, $http, $templateCache) {
+    angular.forEach($route.routes, function(r) {
+        if (r.templateUrl) {
+            $http.get(r.templateUrl, {cache: $templateCache});
+        }
+    });
+}]);

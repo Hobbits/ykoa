@@ -1,1 +1,24 @@
-app.controller("aboutCtrl",["$scope","AJAX","$resource","noticeInfo",function(E,D,A,B){E.company={};E.IMAGE_ROOT=IMAGE_ROOT;var F={read:{method:"GET",cache:true}};var C=A(APP_ACTION.ABOUTUS,{},F);E.$emit("LOAD");C.read(function(H){if(H.status=="ok"){var G=H.result;E.company.company_logo=G.logo;E.company.company_info=G.company_info;E.company.company_tel=G.company_tel;E.company.company_qq=G.company_qq;E.company.company_net=G.company_net;E.company.company_email=G.company_email}E.$emit("UNLOAD")},function(G){B.show();E.$emit("UNLOAD")})}]);
+app.controller("aboutCtrl",['$scope','AJAX','$resource','noticeInfo',function($scope,AJAX,$resource,noticeInfo){
+    $scope.company = {}
+    $scope.IMAGE_ROOT = IMAGE_ROOT;
+    var actions =  {
+        read: {method: 'GET', cache:true }
+    };
+    var companyInfo = $resource(APP_ACTION.ABOUTUS, {}, actions);
+    $scope.$emit('LOAD');
+    companyInfo.read(function(data){
+        if(data.status == 'ok') {
+            var d = data.result;
+            $scope.company.company_logo = d.logo;
+            $scope.company.company_info = d.company_info;
+            $scope.company.company_tel = d.company_tel;
+            $scope.company.company_qq = d.company_qq;
+            $scope.company.company_net = d.company_net;
+            $scope.company.company_email = d.company_email;
+        }
+        $scope.$emit('UNLOAD');
+    }, function(error){
+        noticeInfo.show();
+        $scope.$emit('UNLOAD');
+    });
+}]);

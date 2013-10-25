@@ -1,1 +1,119 @@
-var app=angular.module("guoqing2013.yunkooApp",["ngRoute","ngAnimate","ngResource","ngStorage","ngSanitize","ajoslin.mobile-navigate","hmTouchEvents"]);app.config(["$httpProvider",function(A){A.defaults.useXDomain=true;delete A.defaults.headers.common["X-Requested-With"];A.defaults.headers.post["Content-Type"]="application/x-www-form-urlencoded;charset=utf-8"}]);app.controller("MainCtrl",["$scope","$navigate",function(D,A){D.$navigate=A;var C={delay:1800,date:null,timeoutId:null};var B={open:function(E){if(typeof(E)!=="undefined"){C.delay=E}C.date=new Date();if(C.timeoutId){clearTimeout(C.timeoutId)}C.timeoutId=setTimeout(function(){D.$apply(function(){D.loading=true})},C.delay)},close:function(){if(C.timeoutId){var E=new Date();if(C.date&&(E-C.date)<=C.delay&&C.timeoutId){clearTimeout(C.timeoutId)}D.loading=false}C.timeoutId=null}};D.$on("LOAD",function(){B.open()});D.$on("UNLOAD",function(){B.close()})}]);app.directive("navTo",["$navigate",function(A){return{restrict:"A",link:function(D,E,C){var B=function(){var G=C["navTo"];var F=C.ani;if(G=="back"){D.$apply(function(){A.back()})}else{if(F&&F.substr(0,1)=="-"){F=F.substr(1);D.$apply(function(){A.go(G,F,true)})}else{D.$apply(function(){A.go(G,F)})}}};if(C["ebind"]){if(isTouchDevice){E.bind(C["ebind"],B)}else{E.bind("click",B)}}else{if(window.navigator.msPointerEnabled){E.bind("click",B)}else{Hammer(E[0]).on("tap",B)}}}}}]);app.directive("touchact",function(){return{restrict:"A",link:function(B,C,A){if(!("add" in document.body.classList)){return}var D=A["touchact"]||"navfocus";C.bind("touchstart",function(){var E=this.classList;E.add(D);setTimeout(function(){E.remove(D)},300)});C.bind("touchend",function(){this.classList.remove(D)})}}});
+/*启动angular*/
+var app=angular.module('guoqing2013.yunkooApp', ['ngRoute','ngAnimate','ngResource','ngStorage','ngSanitize','ajoslin.mobile-navigate','hmTouchEvents']);
+
+
+app.config(['$httpProvider',function($httpProvider) {
+    $httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+    // Use x-www-form-urlencoded Content-Type
+    $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+}]);
+
+app.controller('MainCtrl', ['$scope', '$navigate',function($scope, $navigate) {
+    $scope.$navigate = $navigate;
+
+    var timmer={
+        delay:1800,
+        date:null,
+        timeoutId:null
+    };
+
+    var act={
+        open: function (delay) {
+            if(typeof(delay)!=='undefined'){
+                timmer.delay=delay;
+            }
+
+            timmer.date=new Date();
+            if(timmer.timeoutId){clearTimeout(timmer.timeoutId);}
+
+            timmer.timeoutId=setTimeout(function(){
+                    $scope.$apply(function(){$scope.loading = true;});
+            },timmer.delay);
+        },
+        close: function () {
+
+              if(timmer.timeoutId){
+                  var cDate=new Date();
+                  if(timmer.date && (cDate-timmer.date)<=timmer.delay && timmer.timeoutId){
+                      clearTimeout(timmer.timeoutId);
+                  }
+                  $scope.loading = false;
+              }
+
+            timmer.timeoutId=null;
+        }
+    };
+
+
+    $scope.$on('LOAD', function() {act.open();}
+    );
+    $scope.$on('UNLOAD', function() {act.close();});
+}]);
+
+/*导航动画
+* 用法：添加"nav-to"属性 "ani"属性（动画）ani属性值前加符号为反向
+* */
+app.directive("navTo",['$navigate', function($navigate){
+    return {
+        restrict: 'A',
+        link: function (scope,element,attrs) {
+
+            var tapAct=function(){
+                var path=attrs['navTo'];
+                var animate=attrs.ani;
+                if(path=='back'){
+                    scope.$apply(function(){$navigate.back()});
+                }else{
+                    if(animate && animate.substr(0, 1) == "-"){
+                        animate=animate.substr(1);
+                        scope.$apply(function(){$navigate.go(path,animate,true)});
+                    }else{
+                        scope.$apply(function(){$navigate.go(path,animate)});
+                    }
+
+                };
+            };
+
+            if(attrs['ebind']){
+                if(isTouchDevice){
+                    element.bind(attrs['ebind'],tapAct);
+                }else{
+                    element.bind('click',tapAct);
+                }
+
+            }else{
+                if(window.navigator.msPointerEnabled){
+                    element.bind("click",tapAct);
+                }else{
+                    Hammer(element[0]).on("tap",tapAct);
+                }
+            }
+
+
+
+
+        }
+    }
+}]);
+
+
+app.directive("touchact",function(){
+    return {
+        restrict: 'A',
+        link: function (scope,element,attrs) {
+            if(!('add' in document.body.classList)){return;}
+            var classname=attrs['touchact'] || 'navfocus';
+            element.bind("touchstart",function(){
+                var cl=this.classList;
+                cl.add(classname);
+                setTimeout(function(){cl.remove(classname)},300);
+            });
+            element.bind("touchend",function(){
+                this.classList.remove(classname);
+            })
+        }
+    }
+});
+
+

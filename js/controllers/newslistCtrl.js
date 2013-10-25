@@ -1,1 +1,72 @@
-app.controller("newslistCtrl",["$scope","newsList","$sessionStorage",function(C,B,A){C.loadmore={act:function(){D(C.catChosen,C.loadmore.curPage[C.catChosen]+1)},curPage:[null,0,0],isloading:false,limit:5,standbyText:"点击载入更多"};var D=function(F,E){B.query({catId:F,pageNum:E,limit:C.loadmore.limit},function(G){var H=function(M,N){var L=[];for(var I in M){if(M[I][N]){var K=M[I][N];if(("m_"+K) in L){L["m_"+K]["arr"].push(M[I])}else{L["m_"+K]={monthNote:K,arr:[M[I]]}}}}var J=[];for(g in L){J.push(L[g])}if(angular.isArray(G)&&G.length>=C.loadmore.limit){C.loadmore.curPage[F]=E;C.loadmore.isloading=false;C.loadmore.standbyText="点击载入更多"}else{C.loadmore.isloading=false;C.loadmore.standbyText="没有更多了"}return J};if(C["newsList"+F]){C["newsList"+F]=C["newsList"+F].concat(H(G,"m"))}else{C["newsList"+F]=H(G,"m")}})};C.$watch("catChosen",function(E){C.loadmore.isloading=true;C.loadmore.standbyText="载入中";D(E,C.loadmore.curPage[E]+1);A.newslistCat=E});if(A.newslistCat){C.catChosen=A.newslistCat}else{C.catChosen=1}}]);
+app.controller("newslistCtrl",['$scope','newsList','$sessionStorage',function($scope,newsList,$sessionStorage){
+
+    $scope.loadmore={
+        act:function(){
+            queryAct($scope.catChosen,$scope.loadmore.curPage[$scope.catChosen]+1);
+        },
+        curPage:[null,0,0],
+        isloading:false,
+        limit:5,/*每页多少*/
+        standbyText:'点击载入更多'
+    }
+
+    var queryAct=function(v,pageNum){
+        newsList.query({catId:v,pageNum:pageNum,limit:$scope.loadmore.limit},function(u){
+            var arrange=function(list,monthKey){
+                var arrangedList=[];
+                for(var i in list){
+                    if(list[i][monthKey]){
+                        var curmkey=list[i][monthKey];
+                        if(("m_"+curmkey) in arrangedList){
+                            arrangedList["m_"+curmkey]['arr'].push(list[i]);
+                        }else{
+                            arrangedList["m_"+curmkey]={
+                                monthNote:curmkey,
+                                arr:[list[i]]
+                            };
+                        }
+
+                    }
+                };
+                var result=[]
+                for(g in arrangedList){
+                    result.push(arrangedList[g])
+                }
+                if(angular.isArray(u) && u.length>=$scope.loadmore.limit){
+                    $scope.loadmore.curPage[v]=pageNum;
+                    $scope.loadmore.isloading=false;
+                    $scope.loadmore.standbyText="点击载入更多";
+                }else{
+                    $scope.loadmore.isloading=false;
+                    $scope.loadmore.standbyText="没有更多了";
+                }
+
+                return result;
+            }
+            if($scope['newsList'+v]){
+                $scope['newsList'+v]=$scope['newsList'+v].concat(arrange(u,'m'));
+            }else{
+                $scope['newsList'+v]=arrange(u,'m');
+            }
+
+
+        });
+    }
+
+
+    $scope.$watch('catChosen', function(v) {
+
+        $scope.loadmore.isloading=true;
+        $scope.loadmore.standbyText="载入中";
+        queryAct(v,$scope.loadmore.curPage[v]+1);
+        $sessionStorage.newslistCat=v;
+    });
+
+
+    if($sessionStorage.newslistCat){
+        $scope.catChosen=$sessionStorage.newslistCat;
+    }else{
+        $scope.catChosen=1;
+    }
+
+}])
