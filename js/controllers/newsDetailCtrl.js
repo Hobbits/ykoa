@@ -1,1 +1,36 @@
-app.controller("newsDetailCtrl",["$scope","$routeParams","$resource",function(D,A,B){var C=A["aid"];var E=B(APP_ACTION["NEWSDETAIL"]+":aid",{"aid":C});D.detail={};D.detail=E.get(function(F){if(F.content){D.detail.content=F.content}if(F.picture){D.detail.picture=IMAGE_ROOT+F.picture}else{D.detail.picture=null}},function(F){D.detail.title=":( 数据传输错误"});D.newBro=function(F){window.plugins.socialsharing.share(D.detail.title,D.detail.title,D.detail.picture,F)}}]);
+app.controller("newsDetailCtrl",['$scope','$routeParams','$resource',function($scope,$routeParams,$resource){
+        var aid=$routeParams['aid'];
+        var newsDt=$resource(APP_ACTION['NEWSDETAIL']+':aid',
+            {'aid':aid});
+
+    $scope.detail={};
+        $scope.detail=newsDt.get(function(data){
+            if(data.content){
+                $scope.detail.content=data.content;
+            }
+            if(data.picture){
+                $scope.detail.picture=IMAGE_ROOT+data.picture;
+            }else{
+                $scope.detail.picture=null;
+            };
+
+
+
+        },function(error){
+            $scope.detail.title=":( 数据传输错误";
+        });
+
+
+    $scope.newBro=function(url){
+        var tt=$scope.detail.title || null;
+
+        try{
+        window.plugins.socialsharing.share(tt,tt, $scope.detail.picture, url);
+        }catch(e){
+            alert('分享模块加载失败');
+        }
+    }
+
+
+
+}])
