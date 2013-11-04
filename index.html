@@ -3,12 +3,17 @@
 <head>
     <meta charset="utf-8" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="viewport" content="target-densitydpi=medium-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="target-densitydpi=device-dpi, width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="msapplication-tap-highlight" content="no" />
+
     <title>云库科技</title>
 
     <link rel="apple-touch-icon-precomposed" href="icon152x152.png"/>
     <link rel="icon" type="image/png" href="icon-trans.png"/>
-    <link rel="dns-prefetch" href="//www.szyunkoo.com">
+    <link rel="dns-prefetch" href="//www.szyunkoo.com"/>
+
+    <script type="text/javascript" src="phonegap.js"></script>
+    <script src="js/plugins/SocialSharing.js"></script>
 
     <script src="libs/jquery.js"></script>
     <script src="libs/angular/angular.min.js"></script>
@@ -76,7 +81,7 @@
 </div>
 <div id="rightWrap">
 <header data-ng-controller="headerCtrl" ng-init="title.pageTitle='';title.backTitle=''" class="topcoat-navigation-bar">
-    <div class="topcoat-navigation-bar__item left quarter">
+    <div class="headerbackBtn topcoat-navigation-bar__item left quarter">
         <a class="topcoat-icon-button--quiet v-center" hm-tap="historyBack()">
             <!--<span class="topcoat-icon home-icon">{{title.backTitle}}</span>-->
             <span class="headericon icon-left-bold"></span>
@@ -121,6 +126,4 @@
 <script defer src="js/controllers/aboutCtrl.js"></script>
 <script defer src="js/controllers/jobsCtrl.js"></script>
 <script defer src="js/other.js"></script>
-
-<script type="text/javascript" src="phonegap.js"></script>
 </html>
